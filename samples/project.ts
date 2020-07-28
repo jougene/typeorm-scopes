@@ -7,11 +7,9 @@ import {
     BaseEntity,
     CreateDateColumn,
     UpdateDateColumn,
-    FindConditions,
 } from 'typeorm';
-//import * as crypto from 'crypto';
 
-const fireScope = (proto: any, thees: any, scope: FindConditions<Project>): any => {
+const declareScope = (proto: any, thees: any, scope: any): any => {
     const NewProto = class extends thees {};
     const existed = thees['scopes'] || [];
     const scopes = (NewProto['scopes'] = existed.concat(scope));
@@ -44,11 +42,11 @@ export class Project extends BaseEntity {
     public updatedAt: Date;
 
     static get some(): any {
-        return fireScope(Project, this, { name: 'Active project' });
+        return declareScope(Project, this, { name: 'Active project' });
     }
 
     static get active(): any {
-        return fireScope(Project, this, { status: 'active' });
+        return declareScope(Project, this, { status: 'active' });
     }
 }
 
@@ -71,10 +69,8 @@ const options: ConnectionOptions = {
     await Project.insert({ status: 'active', name: 'Another Active project' });
     await Project.insert({ status: 'other', name: 'Other project' });
 
-    //console.log('===================all===================');
-    //console.log(await Project.find());
-    console.log('==================active=================');
+    console.log('==================active and some=================');
     console.log(await Project.active.some.find());
-    console.log('==================active1=================');
+    console.log('==================some and active=================');
     console.log(await Project.some.active.find());
 })();
