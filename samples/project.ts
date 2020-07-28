@@ -7,8 +7,24 @@ import {
     BaseEntity,
     CreateDateColumn,
     UpdateDateColumn,
+    FindConditions,
 } from 'typeorm';
 //import * as crypto from 'crypto';
+
+const fireScope = (proto: any, thees: any, scope: FindConditions<Project>): any => {
+    const NewProto = class extends thees {};
+    const existed = thees['scopes'] || [];
+    const scopes = (NewProto['scopes'] = existed.concat(scope));
+
+    const scopesFindOptions = scopes.reduce((r, c) => Object.assign(r, c), {});
+
+    NewProto.find = async (options: any): Promise<typeof proto[]> => {
+        const findOptions = { ...options, ...scopesFindOptions };
+        return proto.find(findOptions);
+    };
+
+    return NewProto;
+};
 
 @Entity()
 export class Project extends BaseEntity {
@@ -28,41 +44,20 @@ export class Project extends BaseEntity {
     public updatedAt: Date;
 
     static get some(): any {
-        const NewProto = class extends this {};
-        const existed = this['scopes'] || [];
-        const scopes = (NewProto['scopes'] = existed.concat([{ name: 'Active project' }]));
-
-        const scopesFindOptions = scopes.reduce((r, c) => Object.assign(r, c), {});
-
-        NewProto.find = async (options: any): Promise<Project[]> => {
-            const findOptions = { ...options, ...scopesFindOptions };
-            return Project.find(findOptions);
-        };
-
-        return NewProto;
+        return fireScope(Project, this, { name: 'Active project' });
     }
 
     static get active(): any {
-        const NewProto = class extends this {};
-        const existed = this['scopes'] || [];
-        const scopes = (NewProto['scopes'] = existed.concat({ status: 'active' }));
-
-        console.log({ scopes })
-
-        const scopesFindOptions = scopes.reduce((r, c) => Object.assign(r, c), {});
-
-        NewProto.find = async (options: any): Promise<Project[]> => {
-            const findOptions = { ...options, ...scopesFindOptions };
-            return Project.find(findOptions);
-        };
-
-        return NewProto;
+        return fireScope(Project, this, { status: 'active' });
     }
+}
+
+export interface Project {
+    active: any;
 }
 
 const options: ConnectionOptions = {
     type: 'sqlite',
-    //logging: true,
     database: ':memory:',
     entities: [Project],
     synchronize: true,
@@ -82,6 +77,4 @@ const options: ConnectionOptions = {
     console.log(await Project.active.some.find());
     console.log('==================active1=================');
     console.log(await Project.some.active.find());
-    console.log(await Project.active.find());
-
 })();
