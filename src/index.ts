@@ -1,19 +1,14 @@
-export * from './scope.decorator';
+export const declareScope = (proto: any, thees: any, scope: any): any => {
+    const NewProto = class extends thees {};
+    const existed = thees['scopes'] || [];
+    const scopes = (NewProto['scopes'] = existed.concat(scope));
 
-//@Exclude()
-//static scopes = {
-//active: { status: ProjectStatus.DRAFT },
-//};
+    const scopesFindOptions = scopes.reduce((r, c) => Object.assign(r, c), {});
 
-//static get active(): any {
-//const NewProto = class extends Project {};
+    NewProto.find = async (options: any): Promise<any[]> => {
+        const findOptions = { ...options, ...scopesFindOptions };
+        return proto.find(findOptions);
+    };
 
-//// and all other methods
-//// findOne
-//NewProto.find = async (options: any): Promise<Project[]> => {
-//const findOptions = { ...options, ...Project.scopes.active };
-//return Project.find(findOptions);
-//};
-
-//return NewProto;
-//}
+    return NewProto;
+};

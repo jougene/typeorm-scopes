@@ -1,7 +1,7 @@
 {
-  "name": "typeorm-state-machine",
-  "version": "0.1.3",
-  "description": "",
+  "name": "typeorm-scopes",
+  "version": "0.1.0",
+  "description": "Scopes implementation for typeorm",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",

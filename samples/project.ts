@@ -8,21 +8,7 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
 } from 'typeorm';
-
-const declareScope = (proto: any, thees: any, scope: any): any => {
-    const NewProto = class extends thees {};
-    const existed = thees['scopes'] || [];
-    const scopes = (NewProto['scopes'] = existed.concat(scope));
-
-    const scopesFindOptions = scopes.reduce((r, c) => Object.assign(r, c), {});
-
-    NewProto.find = async (options: any): Promise<typeof proto[]> => {
-        const findOptions = { ...options, ...scopesFindOptions };
-        return proto.find(findOptions);
-    };
-
-    return NewProto;
-};
+import { declareScope } from '../src';
 
 @Entity()
 export class Project extends BaseEntity {
@@ -41,17 +27,14 @@ export class Project extends BaseEntity {
     @UpdateDateColumn()
     public updatedAt: Date;
 
-    static get some(): any {
+    // Scopes
+    static get some(): typeof Project {
         return declareScope(Project, this, { name: 'Active project' });
     }
 
-    static get active(): any {
+    static get active(): typeof Project {
         return declareScope(Project, this, { status: 'active' });
     }
-}
-
-export interface Project {
-    active: any;
 }
 
 const options: ConnectionOptions = {

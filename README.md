@@ -1,76 +1,53 @@
 # Typeorm State Machine
 
-Declarative state machine definition for typeorm entity classes
+Scopes for typeorm
 
 ### Why?
 
+See https://guides.rubyonrails.org/active_record_querying.html#scopes for example
+Very comfortably, isn't it?
+
 ### Usage
-Imagine you have some payment model.
-This payment has statuses:
-- new
-- registered
-- held
-- charged
-- error
-- refunded
+Now it is implemented only when typeorm is used with Active Record pattern.
 
 ```typescript
-enum Status {
-    NEW = 'new',
-    REGISTERED = 'registered',
-    HELD = 'held',
-    CHARGED = 'charged',
-    ERROR = 'error',
-    REFUNDED = 'refunded',
-}
-
-@StateMachine({
-    transitions: [
-        { name: 'register', from: Status.NEW, to: Status.REGISTERED },
-        { name: 'hold', from: Status.REGISTERED, to: Status.HELD },
-        { name: 'charge', from: Status.HELD, to: Status.CHARGED },
-        { name: 'fail', from: [Status.NEW, Status.HELD, STATUS.REGISTERED], to: Status.ERROR },
-        { name: 'refund', from: Status.CHARGED, to: Status.REFUNDED },
-    ]
-})
 @Entity()
-class Payment {
-    @Column()
-    guid: string;
+class User extends BaseEntity {
+    // Scopes
+    static get active(): typeof User {
+        return declareScope(User, this, { status: 'active' })
+    }
+
+    static createdBefore(date: Date): typeof User {
+        // implement this
+    }
+
+    @PrimaryGeneratedColumn()
+    id: number;
 
     @Column()
-    externalId: string;
+    status: string;
 
-    @Column()
-    amount: number;
+    @CreateDateColumn()
+    public createdAt: Date;
 
-    @Column()
-    status: Status;
+    @UpdateDateColumn()
+    public updatedAt: Date;
 }
 ```
 
-Also you need interface with these methods and same name as entity
+And now we can use our scopes to simplify selects
 
 ```typescript
-interface Payment {
-    register(): void;
-    hold(): void;
-    charge(): void;
-    fail(): void;
-    refund(): void;
-}
-```
+    // simple one scope
+    const users = await User.active.find()
 
-After the entity will be loaded - state machine initialized with proper status.
-And you can use methods from interface which was implemented while entity loading
+    // when scope take arguments
+    const yesterday = new Date(new Date().setDate(new Date().getDate()-1)); // ugly
+    const users = await User.createdBefore(yesterday).find();
 
-```typescript
-payment.register();
-payment.hold();
-payment.charge();
-payment.refund();
-
-payment.register() // will fail, becauze it is incorrect state transition
+    // chaining
+    const users = await User.active.createdBefore(yesterday).find();
 ```
 
 ### Samples
