@@ -1,0 +1,10 @@
+/src/
+.travis.yml
+.editorconfig
+.prettierrc
+.eslintrc.js
+.idea
+db.sqlite
+tsconfig*.json
+/test/
+/samples/
