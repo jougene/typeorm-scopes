@@ -10,5 +10,20 @@ export const declareScope = (proto: any, thees: any, scope: any): any => {
         return proto.find(findOptions);
     };
 
+    NewProto.findOne = async (options: any): Promise<any[]> => {
+        const findOptions = { ...options, ...scopesFindOptions };
+        return proto.findOne(findOptions);
+    };
+
+    NewProto.findOneOrFail = async (options: any): Promise<any[]> => {
+        const findOptions = { ...options, ...scopesFindOptions };
+        return proto.findOne(findOptions);
+    };
+
+    NewProto.count = async (options: any): Promise<any[]> => {
+        const findOptions = { ...options, ...scopesFindOptions };
+        return proto.count(findOptions);
+    };
+
     return NewProto;
 };

@@ -1,6 +1,6 @@
-# Typeorm State Machine
+# Typeorm Scopes
 
-Scopes for typeorm
+Scopes for typeorm (Active Record based)
 
 ### Why?
 

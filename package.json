@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
+    "samples": "ts-node samples/simple.ts",
     "lint": "eslint \"{src,samples,test}/**/*.ts\"",
     "lint:fix": "eslint \"{src,samples,test}/**/*.ts\" --fix",
     "test": "jest"

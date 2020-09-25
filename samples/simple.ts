@@ -56,4 +56,10 @@ const options: ConnectionOptions = {
     console.log(await Project.active.some.find());
     console.log('==================some and active=================');
     console.log(await Project.some.active.find());
+
+    console.log('Active count');
+    console.log(await Project.active.count());
+
+    console.log(await Project.active.findOne());
+    console.log(await Project.active.find());
 })();
