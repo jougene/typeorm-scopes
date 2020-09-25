@@ -20,7 +20,7 @@ class User extends BaseEntity {
     }
 
     static createdBefore(date: Date): typeof User {
-        // implement this
+        return declareScope(Project, this, { createdAt: Between(new Date('1970-01-01').toISOString(), date.toISOString()) });
     }
 
     @PrimaryGeneratedColumn()
