@@ -1,6 +1,6 @@
 {
   "name": "typeorm-scopes",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Scopes implementation for typeorm",
   "main": "dist/index.js",
   "scripts": {
