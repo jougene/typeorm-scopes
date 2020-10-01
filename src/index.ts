@@ -20,8 +20,6 @@ export const declareScope = (proto: any, thees: any, scope: any): any => {
             findOptions.where = { ...options.where, ...scopesFindOptions };
         }
 
-        console.log(findOptions);
-
         return findOptions;
     };
 
