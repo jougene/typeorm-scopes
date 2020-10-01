@@ -7,7 +7,7 @@ export const declareScope = (proto: any, thees: any, scope: any): any => {
 
     NewProto.find = async (options: any): Promise<any[]> => {
         let findOptions = { ...options, ...scopesFindOptions };
-        if (options.where) {
+        if (options && options.where) {
             findOptions = { ...options.where, ...scopesFindOptions };
         }
         return proto.find(findOptions);
@@ -15,7 +15,7 @@ export const declareScope = (proto: any, thees: any, scope: any): any => {
 
     NewProto.findOne = async (options: any): Promise<any[]> => {
         let findOptions = { ...options, ...scopesFindOptions };
-        if (options.where) {
+        if (options && options.where) {
             findOptions = { ...options.where, ...scopesFindOptions };
         }
         return proto.findOne(findOptions);
@@ -23,7 +23,7 @@ export const declareScope = (proto: any, thees: any, scope: any): any => {
 
     NewProto.findOneOrFail = async (options: any): Promise<any[]> => {
         let findOptions = { ...options, ...scopesFindOptions };
-        if (options.where) {
+        if (options && options.where) {
             findOptions = { ...options.where, ...scopesFindOptions };
         }
         return proto.findOne(findOptions);
