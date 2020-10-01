@@ -5,32 +5,51 @@ export const declareScope = (proto: any, thees: any, scope: any): any => {
 
     const scopesFindOptions = scopes.reduce((r, c) => Object.assign(r, c), {});
 
-    NewProto.find = async (options: any): Promise<any[]> => {
-        let findOptions = { ...options, ...scopesFindOptions };
-        if (options && options.where) {
-            findOptions = { ...options.where, ...scopesFindOptions };
+    const resolveFindParams = (options: any, scopesFindOptions: any): any => {
+        let findOptions: any;
+        if (!options) {
+            findOptions = scopesFindOptions;
         }
+
+        if (options && !options.where) {
+            findOptions = { ...options, ...scopesFindOptions };
+        }
+
+        if (options && options.where) {
+            findOptions = options;
+            findOptions.where = { ...options.where, ...scopesFindOptions };
+        }
+
+        console.log(findOptions);
+
+        return findOptions;
+    };
+
+    NewProto.find = async (options: any): Promise<any[]> => {
+        const findOptions = resolveFindParams(options, scopesFindOptions);
         return proto.find(findOptions);
     };
 
     NewProto.findOne = async (options: any): Promise<any[]> => {
-        let findOptions = { ...options, ...scopesFindOptions };
-        if (options && options.where) {
-            findOptions = { ...options.where, ...scopesFindOptions };
+        if (typeof options !== 'object') {
+            return proto.findOne(options, scopesFindOptions);
         }
+
+        const findOptions = resolveFindParams(options, scopesFindOptions);
         return proto.findOne(findOptions);
     };
 
     NewProto.findOneOrFail = async (options: any): Promise<any[]> => {
-        let findOptions = { ...options, ...scopesFindOptions };
-        if (options && options.where) {
-            findOptions = { ...options.where, ...scopesFindOptions };
+        if (typeof options !== 'object') {
+            return proto.findOne(options, scopesFindOptions);
         }
-        return proto.findOne(findOptions);
+
+        const findOptions = resolveFindParams(options, scopesFindOptions);
+        return proto.findOneOrFail(findOptions);
     };
 
     NewProto.count = async (options: any): Promise<any[]> => {
-        const findOptions = { ...options, ...scopesFindOptions };
+        const findOptions = resolveFindParams(options, scopesFindOptions);
         return proto.count(findOptions);
     };
 
