@@ -6,17 +6,26 @@ export const declareScope = (proto: any, thees: any, scope: any): any => {
     const scopesFindOptions = scopes.reduce((r, c) => Object.assign(r, c), {});
 
     NewProto.find = async (options: any): Promise<any[]> => {
-        const findOptions = { ...options, ...scopesFindOptions };
+        let findOptions = { ...options, ...scopesFindOptions };
+        if (options.where) {
+            findOptions = { ...options.where, ...scopesFindOptions };
+        }
         return proto.find(findOptions);
     };
 
     NewProto.findOne = async (options: any): Promise<any[]> => {
-        const findOptions = { ...options, ...scopesFindOptions };
+        let findOptions = { ...options, ...scopesFindOptions };
+        if (options.where) {
+            findOptions = { ...options.where, ...scopesFindOptions };
+        }
         return proto.findOne(findOptions);
     };
 
     NewProto.findOneOrFail = async (options: any): Promise<any[]> => {
-        const findOptions = { ...options, ...scopesFindOptions };
+        let findOptions = { ...options, ...scopesFindOptions };
+        if (options.where) {
+            findOptions = { ...options.where, ...scopesFindOptions };
+        }
         return proto.findOne(findOptions);
     };
 

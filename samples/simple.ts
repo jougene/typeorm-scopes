@@ -52,6 +52,8 @@ const options: ConnectionOptions = {
     await Project.insert({ status: 'active', name: 'Another Active project' });
     await Project.insert({ status: 'other', name: 'Other project' });
 
+    console.log(await Project.active.find({ where: { name: 'Active project' } }));
+
     console.log('==================active and some=================');
     console.log(await Project.active.some.find());
     console.log('==================some and active=================');
