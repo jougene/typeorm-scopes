@@ -5,7 +5,7 @@ Scopes for typeorm (Active Record based)
 ### Why?
 
 See https://guides.rubyonrails.org/active_record_querying.html#scopes for example </br>
-Very comfortably, isn't it?
+Very convenient, isn't it?
 
 ### Usage
 
